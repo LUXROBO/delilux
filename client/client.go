@@ -23,7 +23,7 @@ type ParceluxClient struct {
 // NewParceluxClient returns a new instance of ParceluxClient
 func NewParceluxClient(apiKey string) *ParceluxClient {
 	plClient := &ParceluxClient{
-		apiURL: "http://info.sweettracker.co.kr/tracking/5",
+		apiURL: "http://info.sweettracker.co.kr",
 		header: Header{
 			Authorization: "Basic " + apiKey,
 			ContentType:   "application/json",
