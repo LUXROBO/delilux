@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,25 +13,21 @@ type TrackParcelPayload struct {
 }
 
 func main() {
-	payload := TrackParcelPayload{
-		TKey:     "wS6QdxNImv6DaPt0or1X4g",
-		TCode:    "04",
-		TInvoice: "648428990916",
-	}
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		panic(err)
-	}
-
 	req, err := http.NewRequest(
 		"GET",
 		"http://info.sweettracker.co.kr"+"/api/v1/trackingInfo",
-		bytes.NewBuffer(jsonPayload),
+		nil,
 	)
 	if err != nil {
 		panic(err)
 	}
 	req.Header.Add("Content-Type", "application/json")
+
+	q := req.URL.Query()
+	q.Add("t_key", "wS6QdxNImv6DaPt0or1X4g")
+	q.Add("t_code", "04")
+	q.Add("t_invoice", "648428990916")
+	req.URL.RawQuery = q.Encode()
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
