@@ -6,12 +6,6 @@ import (
 	"net/http"
 )
 
-type TrackParcelPayload struct {
-	TKey     string `json:"t_key"`
-	TCode    string `json:"t_code"`
-	TInvoice string `json:"t_invoice"`
-}
-
 func main() {
 	req, err := http.NewRequest(
 		"GET",
