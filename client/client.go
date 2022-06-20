@@ -1,7 +1,6 @@
 package client
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
 )
@@ -15,8 +14,7 @@ type Client interface {
 type ParceluxClient struct {
 	apiURL string
 	header struct {
-		Authorization string
-		ContentType   string
+		ContentType string
 	}
 }
 
@@ -25,8 +23,7 @@ func NewParceluxClient(apiKey string) *ParceluxClient {
 	plClient := &ParceluxClient{
 		apiURL: "http://info.sweettracker.co.kr",
 		header: Header{
-			Authorization: "Basic " + apiKey,
-			ContentType:   "application/json",
+			ContentType: "application/json",
 		},
 	}
 	return plClient
@@ -34,8 +31,7 @@ func NewParceluxClient(apiKey string) *ParceluxClient {
 
 // Header includes header information of request instance
 type Header struct {
-	Authorization string
-	ContentType   string
+	ContentType string
 }
 
 // HTTPInfo includes http information of request instance
@@ -46,27 +42,27 @@ type HTTPInfo struct {
 }
 
 // RequestWithPayload makes request with a given payload
-func RequestWithPayload(
-	payload interface{},
+func RequestWithQueryParams(
+	params interface{},
 	response interface{},
 	httpInfo HTTPInfo,
 ) interface{} {
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		panic(err)
-	}
-
 	req, err := http.NewRequest(
 		httpInfo.Method,
 		httpInfo.URL,
-		bytes.NewBuffer(jsonPayload),
+		nil,
 	)
 	if err != nil {
 		panic(err)
 	}
 
+	q := req.URL.Query()
+	q.Add("t_key", params.TKey)
+	q.Add("t_code", params.TCode)
+	q.Add("t_invoice", params.TInvoice)
+	req.URL.RawQuery = q.Encode()
+
 	httpHeader := httpInfo.Header
-	req.Header.Add("Authorization", httpHeader.Authorization)
 	req.Header.Add("Content-Type", httpHeader.ContentType)
 
 	client := &http.Client{}
@@ -81,17 +77,17 @@ func RequestWithPayload(
 
 // TrackParcel ...
 func (c ParceluxClient) TrackParcel(
-	trackParcelPayload interface{},
+	trackParcelParams interface{},
 ) interface{} {
-	var trackParcelResp trackParcelResp
-	payload := trackParcelPayload.(TrackParcelPayload)
+	var trackParcelResp TrackParcelResp
+	queryParams := trackParcelParams.(TrackParcelPayload)
 	httpInfo := HTTPInfo{
 		Method: "GET",
-		URL:    c.apiURL + "/api/v1/trackingInfo" + payload.CustomerUID,
+		URL:    c.apiURL + "/api/v1/trackingInfo",
 		Header: c.header,
 	}
-	client.RequestWithPayload(
-		Payload,
+	RequestWithQueryParams(
+		queryParams,
 		&trackParcelResp,
 		httpInfo,
 	)
