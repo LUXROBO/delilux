@@ -1,17 +1,26 @@
 package parcelux
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func setUpParceluxClient() *ParceluxClient {
-	return NewClient("wS6QdxNImv6DaPt0or1X4g")
+func setUpApiKey(t *testing.T) {
+	t.Setenv("API_KEY", "wS6QdxNImv6DaPt0or1X4g")
+}
+
+func setUpParceluxClient(apiKey string) *ParceluxClient {
+	return NewClient(apiKey)
 }
 
 func TestTrackParcel(t *testing.T) {
-	parceluxClient := setUpParceluxClient()
-	trackResult := parceluxClient.TrackParcel("04", "648428990916")
-	assert.Equal(t, true, trackResult.(*TrackResp).Complete)
+	setUpApiKey(t)
+	API_KEY := os.Getenv("API_KEY")
+	parceluxClient := setUpParceluxClient(API_KEY)
+
+	trackCode, trackInvoice := "04", "648428990916"
+	trackResult := parceluxClient.TrackParcel(trackCode, trackInvoice)
+	assert.Equal(t, true, trackResult.(TrackResp).Complete)
 }
