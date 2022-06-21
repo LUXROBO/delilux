@@ -32,6 +32,6 @@ import (
 )
 
 trackClient := parcelux.NewClient(API_KEY)
-trackResult := parcelux.trackParcel(trackCode, trackInvoice)
+trackResult := parcelux.TrackParcel(trackCode, trackInvoice)
 fmt.Println("trackResult:", plResult)
 ```
