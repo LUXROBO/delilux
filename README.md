@@ -25,14 +25,13 @@ go get github.com/luxrobo/parcelux
 
 ## Usage
 ```go
-import "github.com/luxrobo/parcelux/client"
+import (
+    "fmt"
 
-// Add your own API key from sweet tracker
-API_KEY := ""
-parceluxClient := client.NewParceluxClient(API_KEY)
+    "github.com/luxrobo/parcelux"
+)
 
-// Init your own tracking number (i.e. 운송장번호)
-trackNum := ""
-trackResp := parceluxClient.trackParcel(trackNum)
-fmt.Println("trackResp.Status:", trackResp.Status)
+trackClient := client.NewParceluxClient(API_KEY)
+trackResult := plClient.TrackParcel(trackCode, trackInvoice)
+fmt.Println("trackResult:", plResult)
 ```
