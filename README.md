@@ -23,6 +23,9 @@
 go get github.com/luxrobo/parcelux
 ```
 
+## Information
+For trackCode, please refer to `http://info.sweettracker.co.kr/apidoc`
+
 ## Usage
 ```go
 import (
@@ -32,6 +35,6 @@ import (
 )
 
 trackClient := parcelux.NewClient(API_KEY)
-trackResult := parcelux.TrackParcel(trackCode, trackInvoice)
+trackResult := trackClient.TrackParcel(trackCode, trackInvoice)
 fmt.Println("trackResult:", plResult)
 ```
