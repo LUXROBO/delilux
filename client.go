@@ -1,16 +1,16 @@
-package client
+package parcelux
 
 import (
 	"encoding/json"
 	"net/http"
 )
 
-// Client is a wrapper class for sweet-tracker client
+// IParceluxClient is an interface for sweet-tracker api
 type IParceluxClient interface {
 	trackParcel(trackCode string, trackInvoice string) interface{}
 }
 
-// ParceluxClient is a wrapper class for sweet-tracker client
+// ParceluxClient is a wrapper class for sweet-tracker api
 type ParceluxClient struct {
 	apiURL string
 	apiKey string
@@ -19,8 +19,8 @@ type ParceluxClient struct {
 	}
 }
 
-// NewParceluxClient returns a new instance of ParceluxClient
-func NewParceluxClient(apiKey string) *ParceluxClient {
+// NewClient returns a new instance of ParceluxClient
+func NewClient(apiKey string) *ParceluxClient {
 	parceluxClient := &ParceluxClient{
 		apiURL: "http://info.sweettracker.co.kr",
 		apiKey: apiKey,

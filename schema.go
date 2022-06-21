@@ -1,4 +1,4 @@
-package client
+package parcelux
 
 type TrackParams struct {
 	TCode    string `json:"t_code"`

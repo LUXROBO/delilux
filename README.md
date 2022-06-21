@@ -31,7 +31,7 @@ import (
     "github.com/luxrobo/parcelux"
 )
 
-trackClient := client.NewParceluxClient(API_KEY)
-trackResult := plClient.TrackParcel(trackCode, trackInvoice)
+trackClient := parcelux.NewClient(API_KEY)
+trackResult := parcelux.trackParcel(trackCode, trackInvoice)
 fmt.Println("trackResult:", plResult)
 ```
