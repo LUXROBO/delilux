@@ -6,13 +6,14 @@ import (
 )
 
 // Client is a wrapper class for sweet-tracker client
-type Client interface {
-	trackParcel(trackParcelParams interface{}) interface{}
+type IParceluxClient interface {
+	trackParcel(trackCode string, trackInvoice string) interface{}
 }
 
-// ParceluxClient ...
+// ParceluxClient is a wrapper class for sweet-tracker client
 type ParceluxClient struct {
 	apiURL string
+	apiKey string
 	header struct {
 		ContentType string
 	}
@@ -20,13 +21,14 @@ type ParceluxClient struct {
 
 // NewParceluxClient returns a new instance of ParceluxClient
 func NewParceluxClient(apiKey string) *ParceluxClient {
-	plClient := &ParceluxClient{
+	parceluxClient := &ParceluxClient{
 		apiURL: "http://info.sweettracker.co.kr",
+		apiKey: apiKey,
 		header: Header{
 			ContentType: "application/json",
 		},
 	}
-	return plClient
+	return parceluxClient
 }
 
 // Header includes header information of request instance
@@ -42,9 +44,9 @@ type HTTPInfo struct {
 }
 
 // RequestWithPayload makes request with a given payload
-func RequestWithQueryParams(
-	params interface{},
-	response interface{},
+func (pc ParceluxClient) requestWithParams(
+	trackParams TrackParams,
+	response *TrackResp,
 	httpInfo HTTPInfo,
 ) interface{} {
 	req, err := http.NewRequest(
@@ -56,19 +58,17 @@ func RequestWithQueryParams(
 		panic(err)
 	}
 
-	trackParcelParams := params.(TrackParcelParams)
-
 	q := req.URL.Query()
-	q.Add("t_key", trackParcelParams.TKey)
-	q.Add("t_code", trackParcelParams.TCode)
-	q.Add("t_invoice", trackParcelParams.TInvoice)
+	q.Add("t_key", pc.apiKey)
+	q.Add("t_code", trackParams.TCode)
+	q.Add("t_invoice", trackParams.TInvoice)
 	req.URL.RawQuery = q.Encode()
 
 	httpHeader := httpInfo.Header
 	req.Header.Add("Content-Type", httpHeader.ContentType)
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	httpClient := &http.Client{}
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		panic(err)
 	}
@@ -77,21 +77,28 @@ func RequestWithQueryParams(
 	return response
 }
 
-// TrackParcel ...
-func (c ParceluxClient) TrackParcel(
-	trackParcelParams interface{},
+// TrackParcel returns a response of tracking parcel
+func (pc ParceluxClient) TrackParcel(
+	trackCode string, trackInvoice string,
 ) interface{} {
-	var trackParcelResp TrackParcelResp
-	queryParams := trackParcelParams.(TrackParcelParams)
+	trackParams := TrackParams{
+		TCode:    trackCode,
+		TInvoice: trackInvoice,
+	}
+
+	var trackResp TrackResp
+
 	httpInfo := HTTPInfo{
 		Method: "GET",
-		URL:    c.apiURL + "/api/v1/trackingInfo",
-		Header: c.header,
+		URL:    pc.apiURL + "/api/v1/trackingInfo",
+		Header: pc.header,
 	}
-	RequestWithQueryParams(
-		queryParams,
-		&trackParcelResp,
+
+	pc.requestWithParams(
+		trackParams,
+		&trackResp,
 		httpInfo,
 	)
-	return trackParcelResp
+
+	return trackResp
 }

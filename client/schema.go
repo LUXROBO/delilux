@@ -1,12 +1,11 @@
 package client
 
-type TrackParcelParams struct {
-	TKey     string `json:"t_key"`
+type TrackParams struct {
 	TCode    string `json:"t_code"`
 	TInvoice string `json:"t_invoice"`
 }
 
-type TrackParcelResp struct {
+type TrackResp struct {
 	Complete  bool   `json:"complete"`
 	Estimate  string `json:"estimate"`
 	InvoiceNo string `json:"invoiceNo"`
