@@ -7,7 +7,7 @@ import (
 
 // Client is a wrapper class for sweet-tracker client
 type Client interface {
-	trackParcel(trackParcelPayload interface{}) interface{}
+	trackParcel(trackParcelParams interface{}) interface{}
 }
 
 // ParceluxClient ...
@@ -56,10 +56,12 @@ func RequestWithQueryParams(
 		panic(err)
 	}
 
+	trackParcelParams := params.(TrackParcelParams)
+
 	q := req.URL.Query()
-	q.Add("t_key", params.TKey)
-	q.Add("t_code", params.TCode)
-	q.Add("t_invoice", params.TInvoice)
+	q.Add("t_key", trackParcelParams.TKey)
+	q.Add("t_code", trackParcelParams.TCode)
+	q.Add("t_invoice", trackParcelParams.TInvoice)
 	req.URL.RawQuery = q.Encode()
 
 	httpHeader := httpInfo.Header
@@ -80,7 +82,7 @@ func (c ParceluxClient) TrackParcel(
 	trackParcelParams interface{},
 ) interface{} {
 	var trackParcelResp TrackParcelResp
-	queryParams := trackParcelParams.(TrackParcelPayload)
+	queryParams := trackParcelParams.(TrackParcelParams)
 	httpInfo := HTTPInfo{
 		Method: "GET",
 		URL:    c.apiURL + "/api/v1/trackingInfo",

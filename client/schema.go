@@ -1,6 +1,6 @@
 package client
 
-type TrackParcelPayload struct {
+type TrackParcelParams struct {
 	TKey     string `json:"t_key"`
 	TCode    string `json:"t_code"`
 	TInvoice string `json:"t_invoice"`
