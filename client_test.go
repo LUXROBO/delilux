@@ -1,6 +1,7 @@
 package parcelux
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -22,5 +23,6 @@ func TestTrackParcel(t *testing.T) {
 
 	trackCode, trackInvoice := "04", "648428990916"
 	trackResult := parceluxClient.TrackParcel(trackCode, trackInvoice)
-	assert.Equal(t, true, trackResult.(TrackResp).Complete)
+	fmt.Println("trackResult:", trackResult)
+	assert.Equal(t, true, trackResult.Complete)
 }

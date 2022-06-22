@@ -7,7 +7,7 @@ import (
 
 // IParceluxClient is an interface for sweet-tracker api
 type IParceluxClient interface {
-	trackParcel(trackCode string, trackInvoice string) interface{}
+	TrackParcel(trackCode string, trackInvoice string) interface{}
 }
 
 // ParceluxClient is a wrapper class for sweet-tracker api
@@ -43,12 +43,12 @@ type HTTPInfo struct {
 	Header Header
 }
 
-// RequestWithPayload makes request with a given payload
-func (pc ParceluxClient) requestWithParams(
+// requestToTrack makes a request for tracking parcel with a given params
+func (pc ParceluxClient) requestToTrack(
 	trackParams TrackParams,
-	response *TrackResp,
+	response TrackResp,
 	httpInfo HTTPInfo,
-) interface{} {
+) TrackResp {
 	req, err := http.NewRequest(
 		httpInfo.Method,
 		httpInfo.URL,
@@ -80,7 +80,7 @@ func (pc ParceluxClient) requestWithParams(
 // TrackParcel returns a response of tracking parcel
 func (pc ParceluxClient) TrackParcel(
 	trackCode string, trackInvoice string,
-) interface{} {
+) TrackResp {
 	trackParams := TrackParams{
 		TCode:    trackCode,
 		TInvoice: trackInvoice,
@@ -94,9 +94,9 @@ func (pc ParceluxClient) TrackParcel(
 		Header: pc.header,
 	}
 
-	pc.requestWithParams(
+	pc.requestToTrack(
 		trackParams,
-		&trackResp,
+		trackResp,
 		httpInfo,
 	)
 
