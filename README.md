@@ -23,16 +23,18 @@
 go get github.com/luxrobo/parcelux
 ```
 
+## Information
+For trackCode, please refer to `http://info.sweettracker.co.kr/apidoc`
+
 ## Usage
 ```go
-import "github.com/luxrobo/parcelux/client"
+import (
+    "fmt"
 
-// Add your own API key from sweet tracker
-API_KEY := ""
-parceluxClient := client.NewParceluxClient(API_KEY)
+    "github.com/luxrobo/parcelux"
+)
 
-// Init your own tracking number (i.e. 운송장번호)
-trackNum := ""
-trackResp := parceluxClient.trackParcel(trackNum)
-fmt.Println("trackResp.Status:", trackResp.Status)
+trackClient := parcelux.NewClient(API_KEY)
+trackResult := trackClient.TrackParcel(trackCode, trackInvoice)
+fmt.Println("trackResult:", plResult)
 ```
